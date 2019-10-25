@@ -2,27 +2,26 @@ import TextField from '@material-ui/core/TextField'
 import * as React from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
+import List from '@material-ui/core/List'
 
 import './styles.scss'
-
-const URL_BASE = 'https://pokeapi.co/api/v2'
-
-interface IPokemon {
-  name: string
-  url: string
-}
+import PokemonItem from '../PokemonItem'
+import { IPokemonListItem } from '../../types'
+import { API_URL_BASE } from '../../constants'
 
 interface IData {
-  results: IPokemon[]
+  results: IPokemonListItem[]
 }
 
 const PokemonsList: React.FC = () => {
-  const [pokemons, setPokemons] = React.useState<IPokemon[]>([])
-  const [filteredPokemons, setFilteredPokemons] = React.useState<IPokemon[]>([])
+  const [pokemons, setPokemons] = React.useState<IPokemonListItem[]>([])
+  const [filteredPokemons, setFilteredPokemons] = React.useState<
+    IPokemonListItem[]
+  >([])
   const [search, setSearch] = React.useState<string>('')
 
   React.useEffect(() => {
-    fetch(`${URL_BASE}/pokemon/?offset=0&limit=1000`)
+    fetch(`${API_URL_BASE}/pokemon/?offset=0&limit=1000`)
       .then(res => res.json())
       .then((data: IData) => {
         if (data && data.results) {
@@ -47,51 +46,37 @@ const PokemonsList: React.FC = () => {
 
   return (
     <div className="pokemons-list">
-      <div className="search-container">
+      <div className="poke-search">
         <TextField
           fullWidth
-          label="Buscar"
-          placeholder="Ej: Pikachu"
+          label="Search"
+          placeholder="e.g. Moltres"
           value={search}
-          onChange={e => {
-            const s = e.target.value.trim()
-            setSearch(s)
+          onChange={event => {
+            const trimmedSearch = event.target.value.trim()
+            setSearch(trimmedSearch)
           }}
         />
       </div>
-      <div className="list">
-        <AutoSizer>
-          {({ width, height }) => (
-            <FixedSizeList
-              itemSize={40}
-              itemCount={filteredPokemons.length}
-              itemData={filteredPokemons}
-              height={height}
-              width={width}
-            >
-              {PokemonItem}
-            </FixedSizeList>
-          )}
-        </AutoSizer>
+      <div className="list-wrapper">
+        <List className="poke-list">
+          <AutoSizer>
+            {({ width, height }) => (
+              <FixedSizeList
+                itemSize={50}
+                itemCount={filteredPokemons.length}
+                itemData={filteredPokemons}
+                height={height}
+                width={width}
+              >
+                {PokemonItem}
+              </FixedSizeList>
+            )}
+          </AutoSizer>
+        </List>
       </div>
     </div>
   )
-}
-
-interface IPokemonItemProps {
-  data: IPokemon[]
-  index: number
-  style: React.CSSProperties
-}
-
-const PokemonItem: React.FC<IPokemonItemProps> = ({
-  data: pokemonsList,
-  index,
-  style
-}) => {
-  const pokemon = pokemonsList[index]
-
-  return <div style={style}>{pokemon.name}</div>
 }
 
 export default PokemonsList
