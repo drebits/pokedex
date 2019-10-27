@@ -10,10 +10,17 @@ $clean_container_height: 40px;
   border-radius: 20px;
 
   .display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 20px;
     border: 2px solid $black_2;
     background-color: $black_2;
     min-height: 200px;
+
+    &.on {
+      background-color: $white_1;
+    }
   }
 
   .clean-container {

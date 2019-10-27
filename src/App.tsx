@@ -8,6 +8,7 @@ import PokemonsList from './components/PokemonsList'
 import Screen from './components/Screen'
 import FakeButtons from './components/FakeButtons'
 import Loader from './components/Loader'
+import PokemonData from './components/PokemonData'
 import { IRootState } from './reducers'
 
 interface IHocProps {
@@ -21,6 +22,7 @@ const App: React.FC<IHocProps> = ({ loading }) => (
       <Grid item xs={12} sm={6}>
         <FakeButtons />
         <Screen />
+        <PokemonData />
       </Grid>
       <Grid item xs={12} sm={6}>
         <PokemonsList />

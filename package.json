@@ -5,7 +5,9 @@
   "dependencies": {
     "@material-ui/core": "^4.5.1",
     "@material-ui/icons": "^4.5.1",
+    "classnames": "^2.2.6",
     "node-sass": "^4.12.0",
+    "ramda": "^0.26.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-redux": "^7.1.1",
@@ -13,18 +15,20 @@
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5",
     "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "typescript": "3.6.4"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.9",
     "@types/jest": "24.0.19",
     "@types/node": "12.11.5",
+    "@types/ramda": "^0.26.33",
     "@types/react": "16.9.9",
     "@types/react-dom": "16.9.2",
     "@types/react-redux": "^7.1.5",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
-    "@types/react-window": "^1.8.1",
-    "redux-devtools-extension": "^2.13.8"
+    "@types/react-window": "^1.8.1"
   },
   "scripts": {
     "start": "react-scripts start",

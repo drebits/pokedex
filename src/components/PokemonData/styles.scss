@@ -1,0 +1,21 @@
+@import '../../variables';
+
+.pokemon-data {
+  margin-top: 20px;
+  background-color: $white_1;
+  border: 2px solid $black_1;
+  border-radius: 5px;
+  padding: 10px 20px;
+
+  .data-item {
+    font-size: 16px;
+    text-transform: capitalize;
+
+    .value {
+      font-family: 'Press Start 2P';
+      text-transform: capitalize;
+      font-size: 12px;
+      margin-left: 4px;
+    }
+  }
+}

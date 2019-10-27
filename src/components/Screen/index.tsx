@@ -1,3 +1,5 @@
+import classNames from 'classnames'
+import * as R from 'ramda'
 import * as React from 'react'
 import { Cancel } from '@material-ui/icons'
 import { Dispatch, Action, bindActionCreators } from 'redux'
@@ -15,22 +17,40 @@ interface IHocProps {
 export const Screen: React.FC<IHocProps> = ({
   clearSelectedPokemon,
   selectedPokemon
-}) => (
-  <div className="screen">
-    <div className="display"></div>
-    <div className="clean-container">
-      {!!selectedPokemon && (
-        <button
-          type="button"
-          className="clean-button"
-          onClick={clearSelectedPokemon}
-        >
-          <Cancel />
-        </button>
-      )}
+}) => {
+  const frontPic = R.pathOr('', ['sprites', 'front_default'], selectedPokemon)
+  const backPic = R.pathOr('', ['sprites', 'back_default'], selectedPokemon)
+
+  return (
+    <div className="screen">
+      <div
+        className={classNames('display', {
+          on: !!selectedPokemon
+        })}
+      >
+        <div>
+          {!!selectedPokemon && !!frontPic && (
+            <img alt="pokemon" src={frontPic} />
+          )}
+          {!!selectedPokemon && !!backPic && (
+            <img alt="pokemon" src={backPic} />
+          )}
+        </div>
+      </div>
+      <div className="clean-container">
+        {!!selectedPokemon && (
+          <button
+            type="button"
+            className="clean-button"
+            onClick={clearSelectedPokemon}
+          >
+            <Cancel />
+          </button>
+        )}
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 const mapStateToProps = ({ selectedPokemon }: IRootState) => ({
   selectedPokemon
