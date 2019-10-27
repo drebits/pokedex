@@ -1,18 +1,20 @@
+@import '../../variables';
+
 .pokemons-list {
   .poke-search {
-    background-color: #2efb06;
+    background-color: $green_2;
     padding: 20px;
     margin-top: 16px;
     border-radius: 10px;
-    border: 2px solid black;
+    border: 2px solid $black_1;
   }
 
   .list-wrapper {
-    background-color: #296ff6;
+    background-color: $blue_2;
     margin-top: 20px;
     padding: 2px 10px;
     border-radius: 10px;
-    border: 1px solid #000;
+    border: 1px solid $black_1;
 
     .poke-list {
       width: 100%;
