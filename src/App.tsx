@@ -1,14 +1,22 @@
 import React from 'react'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
+import { connect } from 'react-redux'
 
 import './app.scss'
 import PokemonsList from './components/PokemonsList'
 import Screen from './components/Screen'
 import FakeButtons from './components/FakeButtons'
+import Loader from './components/Loader'
+import { IRootState } from './reducers'
 
-const App: React.FC = () => (
+interface IHocProps {
+  loading: IRootState['loading']
+}
+
+const App: React.FC<IHocProps> = ({ loading }) => (
   <Container maxWidth="md" className="pokedex">
+    {loading && <Loader />}
     <Grid container spacing={2}>
       <Grid item xs={12} sm={6}>
         <FakeButtons />
@@ -21,4 +29,8 @@ const App: React.FC = () => (
   </Container>
 )
 
-export default App
+const mapStateToProps = ({ loading }: IRootState) => ({
+  loading
+})
+
+export default connect(mapStateToProps)(App)

@@ -1,8 +1,11 @@
 @import '../../variables';
 
+$clean_container_height: 40px;
+
 .screen {
+  position: relative;
   background-color: $gray_1;
-  padding: 20px;
+  padding: 20px 20px $clean_container_height 20px;
   margin-top: 22px;
   border-radius: 20px;
 
@@ -11,5 +14,29 @@
     border: 2px solid $black_2;
     background-color: $black_2;
     min-height: 200px;
+  }
+
+  .clean-container {
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $gray_1;
+    height: $clean_container_height;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    .clean-button {
+      color: $red_1;
+      padding: 0;
+      outline: none;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      height: 24px;
+    }
   }
 }

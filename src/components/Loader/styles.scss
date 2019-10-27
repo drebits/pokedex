@@ -1,0 +1,28 @@
+@import '../../variables';
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $white_2;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+
+  .content {
+    text-align: center;
+
+    svg {
+      color: $black_1;
+    }
+
+    .text {
+      font-size: 22px;
+      padding-top: 20px;
+      font-family: 'Press Start 2P';
+    }
+  }
+}

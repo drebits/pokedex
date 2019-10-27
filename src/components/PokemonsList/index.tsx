@@ -3,46 +3,41 @@ import * as React from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import List from '@material-ui/core/List'
+import { Action, Dispatch, bindActionCreators } from 'redux'
 
 import './styles.scss'
 import PokemonItem from '../PokemonItem'
 import { IPokemonListItem } from '../../types'
-import { API_URL_BASE } from '../../constants'
+import { getPokemonsAction } from '../../actions'
+import { IRootState } from '../../reducers'
+import { connect } from 'react-redux'
 
-interface IData {
-  results: IPokemonListItem[]
+interface IHocProps {
+  pokemonsList: IRootState['pokemonsList']
+  getPokemons: () => void
 }
 
-const PokemonsList: React.FC = () => {
-  const [pokemons, setPokemons] = React.useState<IPokemonListItem[]>([])
+const PokemonsList: React.FC<IHocProps> = ({ getPokemons, pokemonsList }) => {
   const [filteredPokemons, setFilteredPokemons] = React.useState<
     IPokemonListItem[]
   >([])
   const [search, setSearch] = React.useState<string>('')
 
   React.useEffect(() => {
-    fetch(`${API_URL_BASE}/pokemon/?offset=0&limit=1000`)
-      .then(res => res.json())
-      .then((data: IData) => {
-        if (data && data.results) {
-          setPokemons(data.results)
-          setFilteredPokemons(data.results)
-        }
-      })
-      .catch(console.error)
-  }, [])
+    getPokemons()
+  }, [getPokemons])
 
   React.useEffect(() => {
     if (search.length > 0) {
       const pattern = new RegExp(search, 'i')
-      const newFilteredPokemons = pokemons.filter(pokemon =>
+      const newFilteredPokemons = pokemonsList.filter(pokemon =>
         pattern.test(pokemon.name)
       )
       setFilteredPokemons(newFilteredPokemons)
     } else {
-      setFilteredPokemons(pokemons)
+      setFilteredPokemons(pokemonsList)
     }
-  }, [search, pokemons])
+  }, [search, pokemonsList])
 
   return (
     <div className="pokemons-list">
@@ -79,4 +74,19 @@ const PokemonsList: React.FC = () => {
   )
 }
 
-export default PokemonsList
+const mapStateToProps = ({ pokemonsList }: IRootState) => ({
+  pokemonsList
+})
+
+const mapDispatchToProps = (dispatch: Dispatch<Action>) =>
+  bindActionCreators(
+    {
+      getPokemons: getPokemonsAction
+    },
+    dispatch
+  )
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PokemonsList)
