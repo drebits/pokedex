@@ -7,29 +7,35 @@ import { Action, Dispatch, bindActionCreators } from 'redux'
 
 import './styles.scss'
 import PokemonItem from '../PokemonItem'
-import { IPokemonListItem } from '../../types'
-import { getPokemonsAction } from '../../actions'
+import { IPokemonListItem, TPokemonSearch } from '../../types'
+import { getPokemonsAction, setPokemonSearchAction } from '../../actions'
 import { IRootState } from '../../reducers'
 import { connect } from 'react-redux'
 
 interface IHocProps {
+  pokemonSearch: TPokemonSearch
   pokemonsList: IRootState['pokemonsList']
   getPokemons: () => void
+  setPokemonSearch: (search: TPokemonSearch) => void
 }
 
-const PokemonsList: React.FC<IHocProps> = ({ getPokemons, pokemonsList }) => {
+const PokemonsList: React.FC<IHocProps> = ({
+  getPokemons,
+  pokemonsList,
+  pokemonSearch,
+  setPokemonSearch
+}) => {
   const [filteredPokemons, setFilteredPokemons] = React.useState<
     IPokemonListItem[]
   >([])
-  const [search, setSearch] = React.useState<string>('')
 
   React.useEffect(() => {
     getPokemons()
   }, [getPokemons])
 
   React.useEffect(() => {
-    if (search.length > 0) {
-      const pattern = new RegExp(search, 'i')
+    if (pokemonSearch.length > 0) {
+      const pattern = new RegExp(pokemonSearch, 'i')
       const newFilteredPokemons = pokemonsList.filter(pokemon =>
         pattern.test(pokemon.name)
       )
@@ -37,7 +43,7 @@ const PokemonsList: React.FC<IHocProps> = ({ getPokemons, pokemonsList }) => {
     } else {
       setFilteredPokemons(pokemonsList)
     }
-  }, [search, pokemonsList])
+  }, [pokemonSearch, pokemonsList])
 
   return (
     <div className="pokemons-list">
@@ -46,10 +52,10 @@ const PokemonsList: React.FC<IHocProps> = ({ getPokemons, pokemonsList }) => {
           fullWidth
           label="Search"
           placeholder="e.g. Moltres"
-          value={search}
+          value={pokemonSearch}
           onChange={event => {
             const trimmedSearch = event.target.value.trim()
-            setSearch(trimmedSearch)
+            setPokemonSearch(trimmedSearch)
           }}
         />
       </div>
@@ -74,19 +80,18 @@ const PokemonsList: React.FC<IHocProps> = ({ getPokemons, pokemonsList }) => {
   )
 }
 
-const mapStateToProps = ({ pokemonsList }: IRootState) => ({
-  pokemonsList
+const mapStateToProps = ({ pokemonsList, pokemonSearch }: IRootState) => ({
+  pokemonsList,
+  pokemonSearch
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) =>
   bindActionCreators(
     {
-      getPokemons: getPokemonsAction
+      getPokemons: getPokemonsAction,
+      setPokemonSearch: setPokemonSearchAction
     },
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PokemonsList)
+export default connect(mapStateToProps, mapDispatchToProps)(PokemonsList)

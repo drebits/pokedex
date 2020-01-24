@@ -111,3 +111,5 @@ export interface IPokemonItem {
   types: Type[]
   weight: number
 }
+
+export type TPokemonSearch = string

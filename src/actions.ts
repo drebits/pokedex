@@ -1,12 +1,14 @@
 import { IRootState } from './reducers'
-import { IPokemonItem, IPokemonListItem } from './types'
+import { IPokemonItem, IPokemonListItem, TPokemonSearch } from './types'
 import { API_URL_BASE } from './constants'
 
 export const types = {
   SET_LOADING_ON: 'SET_LOADING_ON',
   SET_LOADING_OFF: 'SET_LOADING_OFF',
   SET_SELECTED_POKEMON: 'SET_SELECTED_POKEMON',
-  SET_POKEMONS_LIST: 'SET_POKEMONS_LIST'
+  SET_POKEMONS_LIST: 'SET_POKEMONS_LIST',
+  SET_POKEMON_SEARCH: 'SET_POKEMON_SEARCH',
+  CLEAR_POKEMON_SEARCH: 'CLEAR_POKEMON_SEARCH'
 }
 
 interface IPokemonsRes {
@@ -29,6 +31,15 @@ export const setPokemonListAction = (pokemons: IPokemonListItem[]) => ({
 export const setSelectedPokemonAction = (pokemon: IPokemonItem | null) => ({
   type: types.SET_SELECTED_POKEMON,
   payload: pokemon
+})
+
+export const setPokemonSearchAction = (pokemonSearch: TPokemonSearch) => ({
+  type: types.SET_POKEMON_SEARCH,
+  payload: pokemonSearch
+})
+
+export const clearPokemonSearchAction = () => ({
+  type: types.CLEAR_POKEMON_SEARCH
 })
 
 export const getPokemonsAction = () => (

@@ -7,15 +7,20 @@ import { connect } from 'react-redux'
 
 import './styles.scss'
 import { IRootState } from '../../reducers'
-import { setSelectedPokemonAction } from '../../actions'
+import {
+  setSelectedPokemonAction,
+  clearPokemonSearchAction
+} from '../../actions'
 
 interface IHocProps {
   selectedPokemon: IRootState['selectedPokemon']
   clearSelectedPokemon: () => void
+  clearPokemonSearch: () => void
 }
 
 export const Screen: React.FC<IHocProps> = ({
   clearSelectedPokemon,
+  clearPokemonSearch,
   selectedPokemon
 }) => {
   const frontPic = R.pathOr('', ['sprites', 'front_default'], selectedPokemon)
@@ -42,7 +47,7 @@ export const Screen: React.FC<IHocProps> = ({
           <button
             type="button"
             className="clean-button"
-            onClick={clearSelectedPokemon}
+            onClick={() => [clearSelectedPokemon(), clearPokemonSearch()]}
           >
             <Cancel />
           </button>
@@ -59,12 +64,10 @@ const mapStateToProps = ({ selectedPokemon }: IRootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch<Action>) =>
   bindActionCreators(
     {
-      clearSelectedPokemon: () => setSelectedPokemonAction(null)
+      clearSelectedPokemon: () => setSelectedPokemonAction(null),
+      clearPokemonSearch: clearPokemonSearchAction
     },
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Screen)
+export default connect(mapStateToProps, mapDispatchToProps)(Screen)
