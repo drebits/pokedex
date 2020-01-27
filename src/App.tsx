@@ -2,6 +2,7 @@ import React from 'react'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import { connect } from 'react-redux'
+import { Action, Dispatch, bindActionCreators } from 'redux'
 
 import './app.scss'
 import PokemonsList from './components/PokemonsList'
@@ -10,31 +11,25 @@ import FakeButtons from './components/FakeButtons'
 import Loader from './components/Loader'
 import PokemonData from './components/PokemonData'
 import { IRootState } from './reducers'
+import { setConnectedToParentOnAction } from './actions'
 
 interface IHocProps {
   loading: IRootState['loading']
+  connectedToParent: IRootState['connectedToParent']
+  setConnectedToParentOn: () => void
 }
 
-interface IAppState {
-  connectedToParent: boolean
-}
+export const CONTAINER_APP_URL = 'http://localhost:3001'
 
-const CONTAINER_APP_URL = 'http://localhost:3001'
-
-class App extends React.Component<IHocProps, IAppState> {
-  constructor(props: IHocProps) {
-    super(props)
-
-    this.state = {
-      connectedToParent: false
-    }
-  }
-
+class App extends React.Component<IHocProps> {
   public componentDidMount() {
-    const parentWindow = window.parent
-    window.addEventListener('message', this.receiveMessage)
+    const isAppInsideIFrame: boolean =
+      window.location !== window.parent.location
 
-    parentWindow.postMessage('hello-parent', CONTAINER_APP_URL)
+    if (isAppInsideIFrame) {
+      window.addEventListener('message', this.receiveMessage)
+      window.parent.postMessage('hello-parent', CONTAINER_APP_URL)
+    }
   }
 
   public componentWillUnmount() {
@@ -62,7 +57,7 @@ class App extends React.Component<IHocProps, IAppState> {
   }
 
   private receiveMessage = (event: MessageEvent) => {
-    const { connectedToParent } = this.state
+    const { connectedToParent, setConnectedToParentOn } = this.props
 
     if (
       !connectedToParent &&
@@ -73,13 +68,22 @@ class App extends React.Component<IHocProps, IAppState> {
         // @ts-ignore
         event.source.postMessage('hello-parent', event.origin)
       }
-      this.setState({ connectedToParent: true })
+      setConnectedToParentOn()
     }
   }
 }
 
-const mapStateToProps = ({ loading }: IRootState) => ({
-  loading
+const mapStateToProps = ({ loading, connectedToParent }: IRootState) => ({
+  loading,
+  connectedToParent
 })
 
-export default connect(mapStateToProps)(App)
+const mapDispatchToProps = (dispatch: Dispatch<Action>) =>
+  bindActionCreators(
+    {
+      setConnectedToParentOn: setConnectedToParentOnAction
+    },
+    dispatch
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

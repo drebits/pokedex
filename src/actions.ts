@@ -8,7 +8,9 @@ export const types = {
   SET_SELECTED_POKEMON: 'SET_SELECTED_POKEMON',
   SET_POKEMONS_LIST: 'SET_POKEMONS_LIST',
   SET_POKEMON_SEARCH: 'SET_POKEMON_SEARCH',
-  CLEAR_POKEMON_SEARCH: 'CLEAR_POKEMON_SEARCH'
+  CLEAR_POKEMON_SEARCH: 'CLEAR_POKEMON_SEARCH',
+  SET_CONNECTED_TO_PARENT_ON: 'SET_CONNECTED_TO_PARENT_ON',
+  SET_CONNECTED_TO_PARENT_OFF: 'SET_CONNECTED_TO_PARENT_OFF'
 }
 
 interface IPokemonsRes {
@@ -21,6 +23,14 @@ export const setLoadingOnAction = () => ({
 
 export const setLoadingOffAction = () => ({
   type: types.SET_LOADING_OFF
+})
+
+export const setConnectedToParentOnAction = () => ({
+  type: types.SET_CONNECTED_TO_PARENT_ON
+})
+
+export const setConnectedToParentOffAction = () => ({
+  type: types.SET_CONNECTED_TO_PARENT_OFF
 })
 
 export const setPokemonListAction = (pokemons: IPokemonListItem[]) => ({

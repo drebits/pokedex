@@ -3,10 +3,12 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
 import rootReducer from './reducers'
+import CommunicationToParentMiddleware from './ParentCommunicationMiddleware'
 
 const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(thunk))
+  // @ts-ignore
+  composeWithDevTools(applyMiddleware(thunk, CommunicationToParentMiddleware))
 )
 
 export default store
