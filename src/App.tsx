@@ -3,6 +3,7 @@ import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import { connect } from 'react-redux'
 import { Action, Dispatch, bindActionCreators } from 'redux'
+import { pathOr } from 'ramda'
 
 import './app.scss'
 import PokemonsList from './components/PokemonsList'
@@ -11,12 +12,18 @@ import FakeButtons from './components/FakeButtons'
 import Loader from './components/Loader'
 import PokemonData from './components/PokemonData'
 import { IRootState } from './reducers'
-import { setConnectedToParentOnAction } from './actions'
+import {
+  setConnectedToParentOnAction,
+  setSelectedPokemonAction,
+  clearPokemonSearchAction
+} from './actions'
 
 interface IHocProps {
   loading: IRootState['loading']
   connectedToParent: IRootState['connectedToParent']
   setConnectedToParentOn: () => void
+  clearSelectedPokemon: () => void
+  clearPokemonSearch: () => void
 }
 
 export const CONTAINER_APP_URL = 'http://localhost:3001'
@@ -57,17 +64,29 @@ class App extends React.Component<IHocProps> {
   }
 
   private receiveMessage = (event: MessageEvent) => {
-    const { connectedToParent, setConnectedToParentOn } = this.props
+    const {
+      connectedToParent,
+      setConnectedToParentOn,
+      clearPokemonSearch,
+      clearSelectedPokemon
+    } = this.props
 
     if (
+      connectedToParent &&
+      event.origin === CONTAINER_APP_URL &&
+      pathOr<string>('', ['_dataType'], event.data) === 'data-to-children'
+    ) {
+      const actionType = pathOr<string>('', ['type'], event.data)
+
+      if (actionType === 'CLEAR_POKEMON') {
+        clearSelectedPokemon()
+        clearPokemonSearch()
+      }
+    } else if (
       !connectedToParent &&
       event.origin === CONTAINER_APP_URL &&
       event.data === 'hello-children'
     ) {
-      if (event.source) {
-        // @ts-ignore
-        event.source.postMessage('hello-parent', event.origin)
-      }
       setConnectedToParentOn()
     }
   }
@@ -81,7 +100,9 @@ const mapStateToProps = ({ loading, connectedToParent }: IRootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch<Action>) =>
   bindActionCreators(
     {
-      setConnectedToParentOn: setConnectedToParentOnAction
+      setConnectedToParentOn: setConnectedToParentOnAction,
+      clearSelectedPokemon: () => setSelectedPokemonAction(null),
+      clearPokemonSearch: clearPokemonSearchAction
     },
     dispatch
   )
