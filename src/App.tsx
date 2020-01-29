@@ -17,6 +17,7 @@ import {
   setSelectedPokemonAction,
   clearPokemonSearchAction
 } from './actions'
+import { messageService, CONTAINER_APP_URL } from './messageService'
 
 interface IHocProps {
   loading: IRootState['loading']
@@ -26,17 +27,10 @@ interface IHocProps {
   clearPokemonSearch: () => void
 }
 
-export const CONTAINER_APP_URL = 'http://localhost:3001'
-
 class App extends React.Component<IHocProps> {
   public componentDidMount() {
-    const isAppInsideIFrame: boolean =
-      window.location !== window.parent.location
-
-    if (isAppInsideIFrame) {
-      window.addEventListener('message', this.receiveMessage)
-      window.parent.postMessage('hello-parent', CONTAINER_APP_URL)
-    }
+    window.addEventListener('message', this.receiveMessage)
+    messageService.send('hello-parent')
   }
 
   public componentWillUnmount() {

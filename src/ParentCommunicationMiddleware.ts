@@ -1,5 +1,5 @@
-import { CONTAINER_APP_URL } from './App'
 import { IRootState } from './reducers'
+import { messageService } from './messageService'
 
 type TCommunicationToParentMiddleware = (store: any) => void
 
@@ -15,7 +15,7 @@ const CommunicationToParentMiddleware: TCommunicationToParentMiddleware = (
       _previousState
     }
 
-    window.parent.postMessage(data, CONTAINER_APP_URL)
+    messageService.send(data)
   }
 
   next(action)
